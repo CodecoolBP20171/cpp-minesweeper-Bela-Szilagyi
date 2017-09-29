@@ -34,89 +34,56 @@ namespace {
 
             int neighbour;
             for (int i = 0; i < width*height; i++) {
-                std::cout<<"\n\tevaluating "<<i<<std::endl;
 
                 //N
-                std::cout<<"north ";
                 neighbour = i - width;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i >= (int)width) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //NE
-                std::cout<<"northeast ";
                 neighbour = i - width + 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i >= (int)width && (i+1) % (int)width != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //E
-                std::cout<<"east ";
                 neighbour = i + 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i < (int)width*(int)height && (i+1) % (int)width != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //SE
-                std::cout<<"southeast ";
                 neighbour = i + width + 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i < (int)width*(int)height-(int)width && (i+1) % (int)width != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //S
-                std::cout<<"south ";
                 neighbour = i + width;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i < (int)width*(int)height-(int)width) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //SW
-                std::cout<<"southwest ";
                 neighbour = i + width - 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i < (int)width*(int)height-(int)width &&
                         i % (int)width != 0 &&
                         i != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //W
-                std::cout<<"west ";
                 neighbour = i - 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i > 0 && i % (int)width != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
                 //NW
-                std::cout<<"northwest ";
                 neighbour = i - width - 1;
-                std::cout<<"neighbour # "<<neighbour<<std::endl;
                 if (i > (int)width && i % (int)width != 0) {
-                    std::cout<<"valid neighbour "<<table[neighbour]<<std::endl;
                     if (table[neighbour] == '*') tableNumbers[i] += 1;
                 }
-                std::cout<<tableNumbers[i]<<std::endl;
 
             }
 
