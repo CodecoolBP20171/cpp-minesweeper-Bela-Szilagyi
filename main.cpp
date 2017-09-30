@@ -282,7 +282,7 @@ namespace {
                     continue;
                 } else if (isMine(nextX, nextY)) {
                     printTable();
-                    std::cout<<"You lost!!";
+                    std::cout<<"You lost! :-(";
                     return true;
                 } else {
                     reveal(nextX + nextY * width);
@@ -290,7 +290,7 @@ namespace {
                 }
             } while (!isAllFound() && !isAllRevealed());
 
-            std::cout<<"You won!";
+            std::cout<<"You won! :-)";
             return true;
         }
 
