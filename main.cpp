@@ -6,7 +6,7 @@ namespace {
     class Minesweeper {
     public:
         Minesweeper(const size_t width, const size_t height)
-                : width(width), height(height),
+                : width(width), height(height), nrOfFoundMines(0),
                   tableNeighbours(new int[width * height]),
                   tableReveal(new int[width * height]),
                   table(new char[width * height]) {
@@ -192,7 +192,7 @@ namespace {
             }
         }
 
-        void printReveal() const {
+        void printReveal() {
             std::cout<<std::endl;
             std::cout<<"   ";
             for (int i = 0; i < width; i++) std::cout<<i<<" ";
@@ -206,10 +206,17 @@ namespace {
                 std::cout<<h<<" ";
                 for (int w = 0; w < width; w++) {
                     std::cout<<"\033[1;34m|\033[0m";
-                    if (tableReveal[h*width+w] != -1) {
-                        std::cout<<tableReveal[h*width+w];
+                    if ( isFlagged(w, h) ) {
+                        std::cout<<"f";
+                    } else if ( isRevealed(w, h) ) {
+                        int reveal = tableReveal[h*width+w];
+                        if (reveal == 0) {
+                            std::cout<<(char)127; //empty square
+                        } else {
+                            std::cout<<tableReveal[h*width+w];
+                        }
                     } else {
-                        std::cout<<"X";
+                        std::cout<<"\033[1;7m"<<(char)127<<"\033[1;0m"; //filled square
                     }
                 }
                 std::cout<<"\033[1;34m|\033[0m"<<std::endl;
@@ -224,6 +231,7 @@ namespace {
         bool game() {
 
             int nextX, nextY;
+            char inputChar;
 
             do {
                 std::cout << "Next x? ";
@@ -236,24 +244,58 @@ namespace {
                     std::cin >> nextY;
                 } while (nextY < 0 || nextY > height);
 
-                if (isRevealed(nextX, nextY)) {
+                std::cout << "Reveal, flag or unflag(r/f/u)? ";
+                do {
+                    std::cin >> inputChar;
+                } while (inputChar != 'r' && inputChar != 'f' && inputChar != 'u');
+
+                if (inputChar == 'u') {
+                    if (!isFlagged(nextX, nextY)) {
+                        std::cout<<"Not flagged!"<<std::endl;
+                        continue;
+                    } else if (isRevealed(nextX, nextY)) {
+                        std::cout<<"Already revelaed!"<<std::endl;
+                        continue;
+                    } else {
+                        unFlag(nextX, nextY);
+                        printReveal();
+                        continue;
+                    }
+                } else if (inputChar == 'f') {
+                    if (isRevealed(nextX, nextY)) {
+                        std::cout<<"Already revelaed!"<<std::endl;
+                        continue;
+                    } else if (isFlagged(nextX, nextY)) {
+                        std::cout<<"Already flagged!"<<std::endl;
+                        continue;
+                    } else {
+                        if ((isMine(nextX, nextY))) {
+                            ++nrOfFoundMines;
+                        }
+                        flag(nextX, nextY);
+                        printReveal();
+                        continue;
+                    }
+                //reveal
+                } else if (isRevealed(nextX, nextY)) {
                     std::cout<<"Already revelaed!"<<std::endl;
                     continue;
-                }
-
-                if (isMine(nextX, nextY)) {
+                } else if (isMine(nextX, nextY)) {
                     printTable();
                     std::cout<<"You lost!!";
                     return true;
+                } else {
+                    reveal(nextX + nextY * width);
+                    printReveal();
                 }
-
-                reveal(nextX + nextY * width);
-                printReveal();
-
-            } while (!isAllRevealed());
+            } while (!isAllFound() && !isAllRevealed());
 
             std::cout<<"You won!";
             return true;
+        }
+
+        bool isAllFound() const {
+            return nrOfFoundMines == nrOfMines;
         }
 
         bool isAllRevealed() {
@@ -268,9 +310,20 @@ namespace {
         }
 
         bool isRevealed(int x, int y) {
-            return tableReveal[y*width + x] != -1;
+            return tableReveal[y*width + x] != -1 || tableReveal[y*width + x] == -2;
         }
 
+        bool isFlagged(int x, int y) {
+            return tableReveal[y*width + x] == -2;
+        }
+
+        void flag(int x, int y) {
+            tableReveal[y*width + x] = -2;
+        }
+
+        void unFlag(int x, int y) {
+            tableReveal[y*width + x] = -1;
+        }
 
     private:
         void fillTable() {
@@ -281,6 +334,7 @@ namespace {
                 random = std::rand()%5+1;
                 if (random > 4) {
                     table[i] = '+';
+                    ++nrOfMines;
                 } else {
                     table[i] = '-';
                 }
@@ -291,13 +345,14 @@ namespace {
         int *tableNeighbours;
         int *tableReveal;
         char *table;
+        int nrOfMines, nrOfFoundMines;
     };
 }
 
 int main() {
     try {
         //Minesweeper ms(100, 50);
-        Minesweeper ms(6, 5);
+        Minesweeper ms(4, 3);
         ms.printTable();
         ms.countNeighbours();
         ms.printNeighbours();
