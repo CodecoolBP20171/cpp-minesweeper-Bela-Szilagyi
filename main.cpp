@@ -131,21 +131,11 @@ namespace {
 
         void reveal(int place) {
 
-            /*
-            for (int i = 0; i < width*height; i++) std::cout<<tableReveal[i];
-            std::cout<<std::endl;
-            */
-
             if (tableReveal[place] == -1) {
                 int reveal = countNeighbourOf(place);
                 tableReveal[place] = reveal;
                 if (reveal == 0) revealNeighbourOf(place);
             }
-
-            /*
-            for (int i = 0; i < width*height; i++) std::cout<<tableReveal[i];
-            std::cout<<std::endl;
-             */
         }
 
         void revealNeighbourOf(int i) {
@@ -204,11 +194,16 @@ namespace {
 
         void printReveal() const {
             std::cout<<std::endl;
+            std::cout<<"   ";
+            for (int i = 0; i < width; i++) std::cout<<i<<" ";
+            std::cout<<std::endl;
+            std::cout<<"  ";
             std::cout<<"\033[1;34m";
             for (int i = 0; i < width*2+1; i++) std::cout<<"-";
             std::cout<<"\033[0m";
             std::cout<<std::endl;
             for (int h = 0; h < height; h++) {
+                std::cout<<h<<" ";
                 for (int w = 0; w < width; w++) {
                     std::cout<<"\033[1;34m|\033[0m";
                     if (tableReveal[h*width+w] != -1) {
@@ -219,11 +214,63 @@ namespace {
                 }
                 std::cout<<"\033[1;34m|\033[0m"<<std::endl;
             }
+            std::cout<<"  ";
             std::cout<<"\033[1;34m";
             for (int i = 0; i < width*2+1; i++) std::cout<<"-";
             std::cout<<"\033[0m";
             std::cout<<std::endl;
         }
+
+        bool game() {
+
+            int nextX, nextY;
+
+            do {
+                std::cout << "Next x? ";
+                do {
+                    std::cin >> nextX;
+                } while (nextX < 0 || nextX > width);
+
+                std::cout << "Next y? ";
+                do {
+                    std::cin >> nextY;
+                } while (nextY < 0 || nextY > height);
+
+                if (isRevealed(nextX, nextY)) {
+                    std::cout<<"Already revelaed!"<<std::endl;
+                    continue;
+                }
+
+                if (isMine(nextX, nextY)) {
+                    printTable();
+                    std::cout<<"You lost!!";
+                    return true;
+                }
+
+                reveal(nextX + nextY * width);
+                printReveal();
+
+            } while (!isAllRevealed());
+
+            std::cout<<"You won!";
+            return true;
+        }
+
+        bool isAllRevealed() {
+            for (int i = 0; i < width * height; i++) {
+                if (tableReveal[i] == -1) return false;
+            }
+            return true;
+        }
+
+        bool isMine(int x, int y) {
+            return table[y*width+x] == '+';
+        }
+
+        bool isRevealed(int x, int y) {
+            return tableReveal[y*width + x] != -1;
+        }
+
 
     private:
         void fillTable() {
@@ -256,8 +303,7 @@ int main() {
         ms.printNeighbours();
         //for (int i = 0; i < 30; i++) ms.reveal(i);
         ms.fillRevealTable();
-        ms.reveal(15);
-        ms.printReveal();
+        ms.game();
     } catch (const std::bad_alloc &e) {
         std::cerr << "Couldn't allocate enough memory for minesweeper table" << std::endl;
         return EXIT_FAILURE;
