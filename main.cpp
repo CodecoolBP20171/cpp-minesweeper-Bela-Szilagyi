@@ -204,20 +204,24 @@ namespace {
 
         void printReveal() const {
             std::cout<<std::endl;
+            std::cout<<"\033[1;34m";
             for (int i = 0; i < width*2+1; i++) std::cout<<"-";
+            std::cout<<"\033[0m";
             std::cout<<std::endl;
             for (int h = 0; h < height; h++) {
                 for (int w = 0; w < width; w++) {
-                    std::cout<<"|";
+                    std::cout<<"\033[1;34m|\033[0m";
                     if (tableReveal[h*width+w] != -1) {
                         std::cout<<tableReveal[h*width+w];
                     } else {
                         std::cout<<"X";
                     }
                 }
-                std::cout<<"|"<<std::endl;
+                std::cout<<"\033[1;34m|\033[0m"<<std::endl;
             }
+            std::cout<<"\033[1;34m";
             for (int i = 0; i < width*2+1; i++) std::cout<<"-";
+            std::cout<<"\033[0m";
             std::cout<<std::endl;
         }
 
