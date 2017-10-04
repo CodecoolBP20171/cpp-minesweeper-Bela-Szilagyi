@@ -3,5 +3,5 @@ project(minesweeper)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp)
-add_executable(minesweeper ${SOURCE_FILES})
+set(SOURCE_FILES main.cpp src/Area.cpp src/Area.h)
+add_executable(areaSweeper ${SOURCE_FILES} src/Area.cpp src/Area.h)
