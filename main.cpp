@@ -170,7 +170,7 @@ namespace {
             }
         }
 
-        int countNeighbourOf(int x, int y) {
+        int countNeighbourOf(const int& x, const int& y) {
             int place = y*width+x;
             int result = 0;
             //directions
@@ -234,7 +234,7 @@ namespace {
             return true;
         }
 
-        void reveal(int x, int y) {
+        void reveal(const int& x, const int& y) {
             Area* place = table+y*width + x;
             if ( !(place)->isRevealed() ) {
                 (place)->setRevealed();
@@ -242,7 +242,7 @@ namespace {
             }
         }
 
-        void revealNeighboursOf(int x, int y) {
+        void revealNeighboursOf(const int& x, const int& y) {
             Area* place = table + y*width+x;
             //directions
             bool n, e, s, w;
@@ -309,7 +309,7 @@ namespace {
             std::cout<<"\033[0m";
         }
 
-        std::string charRepresentationOf(int neighbours) {
+        std::string charRepresentationOf(const int& neighbours) {
             switch (neighbours) {
                 case 0: return "\u0002"; //
                 case 1: return "\033[34m1\033[1;0m"; //blue 1
