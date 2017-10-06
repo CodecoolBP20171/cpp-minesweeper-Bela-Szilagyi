@@ -29,6 +29,7 @@ public:
     void setFlag();
     void removeFlag();
     bool isFlagged();
+    std::string charRepresentationOf();
 
 private:
     bool mined = false;

@@ -244,7 +244,6 @@ namespace {
         }
 
         void reveal(const int& x, const int& y) {
-            //TODO get rid of place
             if ( !(table+y*width + x)->isRevealed() ) {
                 (table+y*width + x)->setRevealed();
                 if ( (table+y*width + x)->getNeighbours() == 0 ) revealNeighboursOf(x, y);
@@ -252,7 +251,6 @@ namespace {
         }
 
         void revealNeighboursOf(const int& x, const int& y) {
-            Area* place = table + y*width+x; //TODO remove this line if ok
             //directions
             bool n, e, s, w;
             n = e = s = w = true;
@@ -286,7 +284,7 @@ namespace {
                 std::cout<<h%10<<" \033[1;34m|\033[0m";
                 for (int w = 0; w < width; w++) {
                     if ( (table+h*width+w)->isFlagged() ) std::cout<<charRepresentations::flagged;
-                    else if ( (table+h*width+w)->isRevealed() ) std::cout<<charRepresentationOf((table+h*width+w)->getNeighbours());
+                    else if ( (table+h*width+w)->isRevealed() ) std::cout<<(table+h*width+w)->charRepresentationOf();
                     else std::cout<<charRepresentations::unrevealed;
                     std::cout<<"\033[1;34m|\033[0m";
                 }
@@ -301,7 +299,7 @@ namespace {
             for (int h = 0; h < height; h++) {
                 std::cout<<"\033[1;34m|\033[0m";
                 for (int w = 0; w < width; w++) {
-                    if ( (table+h*width+w)->isRevealed() ) std::cout<<charRepresentationOf((table+h*width+w)->getNeighbours());
+                    if ( (table+h*width+w)->isRevealed() ) std::cout<<(table+h*width+w)->charRepresentationOf();
                     else if ( (table+h*width+w)->isMined() ) std::cout<<charRepresentations::boom;
                     else std::cout<<charRepresentations::unrevealed;
                     std::cout<<"\033[1;34m|\033[0m";
@@ -316,20 +314,6 @@ namespace {
             for (int i = 0; i <= width*2; i++) std::cout<<"-";
             std::cout<<std::endl;
             std::cout<<"\033[0m";
-        }
-        //TODO move to area class
-        std::string charRepresentationOf(const int& neighbours) {
-            switch (neighbours) {
-                case 0: return "\u0002"; //
-                case 1: return "\033[34m1\033[1;0m"; //blue 1
-                case 2: return "\033[32m2\033[1;0m"; //green2
-                case 3: return "\033[31m3\033[1;0m"; //red3
-                case 4: return "\033[33m4\033[1;0m"; //yellow4
-                case 5: return "\033[36m5\033[1;0m"; //cyan5
-                case 6: return "\033[35m6\033[1;0m"; //magenta6
-                case 7: return "7"; //black7
-                case 8: return "\033[1m\033[30m8\033[1;0m"; //bold black8
-            }
         }
 
         size_t width, height;
