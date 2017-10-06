@@ -175,9 +175,8 @@ namespace {
             Area *place = table + y * width + x;
             int result = 0;
             //directions
-            //TODO setDirections() function
             bool n, e, s, w;
-            setDirections(x, y, n, e, s, w);
+            setValidDirections(x, y, n, e, s, w);
 
             if (n) result += (place - width)->isMined();
             if (n && e) result += (place - width + 1)->isMined();
@@ -191,7 +190,7 @@ namespace {
             return result;
         }
 
-        void setDirections(const int &x, const int &y, bool &n, bool &e, bool &s, bool &w) {
+        void setValidDirections(const int &x, const int &y, bool &n, bool &e, bool &s, bool &w) {
             n = e = s = w = true;
             if (y == 0)
             n = false;
@@ -245,10 +244,10 @@ namespace {
         }
 
         void reveal(const int& x, const int& y) {
-            Area* place = table+y*width + x;//TODO get rid of place
-            if ( !(place)->isRevealed() ) {
-                (place)->setRevealed();
-                if ( (place)->getNeighbours() == 0 ) revealNeighboursOf(x, y);
+            //TODO get rid of place
+            if ( !(table+y*width + x)->isRevealed() ) {
+                (table+y*width + x)->setRevealed();
+                if ( (table+y*width + x)->getNeighbours() == 0 ) revealNeighboursOf(x, y);
             }
         }
 
