@@ -171,9 +171,10 @@ namespace {
         }
 
         int countNeighbourOf(const int& x, const int& y) {
-            int place = y*width+x; //TODO place=table+...
+            Area * place = table+y*width+x; //TODO place=table+...
             int result = 0;
             //directions
+            //TODO setDirections() function
             bool n, e, s, w;
             n = e = s = w = true;
             if (y == 0) n = false;
@@ -181,14 +182,14 @@ namespace {
             if (x % width == 0) w = false;
             else if ( (x+1) % width == 0) e = false;
 
-            if (n) result += (table+place-width)->isMined();
-            if (n && e) result += (table+place-width+1)->isMined();
-            if (e) result += (table+place+1)->isMined();
-            if (s && e) result += (table+place+width+1)->isMined();
-            if (s) result += (table+place+width)->isMined();
-            if (s && w) result += (table+place+width-1)->isMined();
-            if (w) result += (table+place-1)->isMined();
-            if (n && w) result += (table+place-width-1)->isMined();
+            if (n) result += (place-width)->isMined();
+            if (n && e) result += (place-width+1)->isMined();
+            if (e) result += (place+1)->isMined();
+            if (s && e) result += (place+width+1)->isMined();
+            if (s) result += (place+width)->isMined();
+            if (s && w) result += (place+width-1)->isMined();
+            if (w) result += (place-1)->isMined();
+            if (n && w) result += (place-width-1)->isMined();
 
             return result;
         }
