@@ -7,6 +7,7 @@ namespace {
     class Minesweeper {
     public:
         Minesweeper() {}
+
         /* In a real implementation there would also be a
          * - copy constructor
          * - assignment operator
@@ -35,11 +36,11 @@ namespace {
             std::string option;
             do {
                 do {
-                    std::cout << "Enter x (between 0 and "<<width-1<<") ";
+                    std::cout << "Enter x (between 0 and " << width - 1 << ") ";
                     std::cin >> x;
                 } while (!isNumericInput() || x < 0 || x >= width);
                 do {
-                    std::cout << "Enter y (between 0 and "<<height-1<<") ";
+                    std::cout << "Enter y (between 0 and " << height - 1 << ") ";
                     std::cin >> y;
                 } while (!isNumericInput() || y < 0 || y >= height);
 
@@ -63,7 +64,7 @@ namespace {
                     } else {
                         reveal(x, y);
                         if (foundMines == nrOfMines && isAllRevealed()) {
-                            std::cout<<":-)"<<std::endl;
+                            std::cout << ":-)" << std::endl;
                             printEnd();
                             return;
                         } else {
@@ -85,7 +86,7 @@ namespace {
                         if (place->isMined()) {
                             ++foundMines;
                             if (foundMines == nrOfMines && isAllRevealed()) {
-                                std::cout<<":-)"<<std::endl;
+                                std::cout << ":-)" << std::endl;
                                 printEnd();
                                 return;
                             }
@@ -94,7 +95,7 @@ namespace {
                         continue;
                     }
                 }
-                if (option[0] =='u') {
+                if (option[0] == 'u') {
                     if (place->isRevealed()) {
                         std::cout << "Already revealed!" << std::endl;
                         continue;
@@ -128,24 +129,24 @@ namespace {
         void setLevel(char l) {
             switch (l) {
                 case 'b' : {
-                    this->width=9;
-                    this->height=9;
+                    this->width = 9;
+                    this->height = 9;
                     this->nrOfMines = 10;
-                    table = new Area[width*height];
+                    table = new Area[width * height];
                     break;
                 };
                 case 'i' : {
-                    this->width=16;
-                    this->height=16;
+                    this->width = 16;
+                    this->height = 16;
                     this->nrOfMines = 40;
-                    table = new Area[width*height];
+                    table = new Area[width * height];
                     break;
                 };
                 case 'e' : {
-                    this->width=30;
-                    this->height=16;
+                    this->width = 30;
+                    this->height = 16;
                     this->nrOfMines = 99;
-                    table = new Area[width*height];
+                    table = new Area[width * height];
                     break;
                 };
             }
@@ -156,42 +157,50 @@ namespace {
             std::srand(std::time(NULL));
             for (int i = 0; i < nrOfMines; i++) {
                 do {
-                    random = std::rand()%(width*height);
-                } while ((table+random)->isMined());
-                (table+random)->setMine();
+                    random = std::rand() % (width * height);
+                } while ((table + random)->isMined());
+                (table + random)->setMine();
             }
         }
 
         void countNeighbours() {
             for (int h = 0; h < height; h++) {
                 for (int w = 0; w < width; w++) {
-                    (table+h*width+w)->setNeighbours(countNeighbourOf(w, h));
+                    (table + h * width + w)->setNeighbours(countNeighbourOf(w, h));
                 }
             }
         }
 
-        int countNeighbourOf(const int& x, const int& y) {
-            Area * place = table+y*width+x; //TODO place=table+...
+        int countNeighbourOf(const int &x, const int &y) {
+            Area *place = table + y * width + x;
             int result = 0;
             //directions
             //TODO setDirections() function
             bool n, e, s, w;
-            n = e = s = w = true;
-            if (y == 0) n = false;
-            else if (y == height - 1) s = false;
-            if (x % width == 0) w = false;
-            else if ( (x+1) % width == 0) e = false;
+            setDirections(x, y, n, e, s, w);
 
-            if (n) result += (place-width)->isMined();
-            if (n && e) result += (place-width+1)->isMined();
-            if (e) result += (place+1)->isMined();
-            if (s && e) result += (place+width+1)->isMined();
-            if (s) result += (place+width)->isMined();
-            if (s && w) result += (place+width-1)->isMined();
-            if (w) result += (place-1)->isMined();
-            if (n && w) result += (place-width-1)->isMined();
+            if (n) result += (place - width)->isMined();
+            if (n && e) result += (place - width + 1)->isMined();
+            if (e) result += (place + 1)->isMined();
+            if (s && e) result += (place + width + 1)->isMined();
+            if (s) result += (place + width)->isMined();
+            if (s && w) result += (place + width - 1)->isMined();
+            if (w) result += (place - 1)->isMined();
+            if (n && w) result += (place - width - 1)->isMined();
 
             return result;
+        }
+
+        void setDirections(const int &x, const int &y, bool &n, bool &e, bool &s, bool &w) {
+            n = e = s = w = true;
+            if (y == 0)
+            n = false;
+            else if (y == height - 1)
+            s = false;
+            if (x % width == 0)
+            w = false;
+            else if ((x+1) % width == 0)
+            e = false;
         }
 
         bool getDebugMode() {
